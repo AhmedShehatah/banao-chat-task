@@ -1,5 +1,6 @@
 package com.ahmed.banaochattask.ui.features
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ahmed.banaochattask.core.utils.sortLatestMessages
@@ -15,20 +16,18 @@ import javax.inject.Inject
 @HiltViewModel
 class ChatViewModel @Inject constructor(private val repo: IChatRepo) : ViewModel() {
 
-    init {
-        getLastMessagesTimes()
-
-    }
 
     private val _lastMessagesTimes = MutableStateFlow(emptyList<LastMessagesTime>())
 
     val lastMessagesTimes: StateFlow<List<LastMessagesTime>> = _lastMessagesTimes
 
-    private fun getLastMessagesTimes() {
+    fun getLastMessagesTimes() {
 
         viewModelScope.launch {
             repo.getLastMessagesTime().collect { items ->
                 val sortedList = sortLatestMessages(items)
+                Log.d("sorted", sortedList.toString())
+
                 _lastMessagesTimes.value = sortedList
             }
 
