@@ -9,4 +9,5 @@ interface IChatRepo {
     fun getLastMessagesTime(): Flow<List<LastMessagesTime>>
     fun getChatMessages(chat: String): Flow<List<ChatMessage>>
     fun sendMessage(chat: String, sender: String, message: String): Flow<Boolean>
-    fun updateLastMessage(chat: String): Flow<Boolean>}
+    fun updateLastMessage(chat: String, message: String): Flow<Boolean>
+}

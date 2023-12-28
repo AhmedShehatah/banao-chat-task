@@ -27,7 +27,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -39,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ahmed.banaochattask.data.prefs.LocalPref
 import com.ahmed.banaochattask.ui.features.ChatViewModel
+import kotlinx.coroutines.delay
 
 data class ChatMessage(val sender: String, val message: String)
 
@@ -65,7 +65,7 @@ fun ChatScreen(chatViewModel: ChatViewModel = hiltViewModel()) {
 //            chatMessages.add(ChatMessage("You", newMessage))
             chatViewModel.sendMessage(LocalPref(context).getString("id")!!, newMessage)
 
-            chatViewModel.updateLastMessage()
+            chatViewModel.updateLastMessage(newMessage)
         }
     }
 }
@@ -74,7 +74,10 @@ fun ChatScreen(chatViewModel: ChatViewModel = hiltViewModel()) {
 @Composable
 fun ChatBody(messages: List<ChatMessage>) {
     val lazyListState = rememberLazyListState()
-    val coroutineScope = rememberCoroutineScope()
+    LaunchedEffect(key1 = messages.size) {
+        delay(100)
+        lazyListState.animateScrollToItem(lazyListState.layoutInfo.totalItemsCount)
+    }
     LazyColumn(
         state = lazyListState,
         modifier = Modifier

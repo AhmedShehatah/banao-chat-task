@@ -19,13 +19,17 @@ class FireBaseStore {
     fun getLastMessagesTimes(): Flow<List<LastMessagesTime>> = callbackFlow {
         ref.child("last").addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                Log.d("db", "called")
                 val data = ArrayList<LastMessagesTime>()
-                for (item in snapshot.children) data.add(
-                    LastMessagesTime(
-                        item.key!!, item.value.toString()
+                for (item in snapshot.children) {
+                    Log.d("items", item.toString())
+                    data.add(
+                        LastMessagesTime(
+                            chat = item.key!!,
+                            time = item.child("time").value.toString(),
+                            message = item.child("message").value.toString()
+                        )
                     )
-                )
+                }
                 trySend(data.toList())
 
             }
@@ -73,8 +77,9 @@ class FireBaseStore {
         awaitClose {}
     }
 
-    fun updateLastMessage(chat: String): Flow<Boolean> = callbackFlow {
-        ref.child("last").updateChildren(mapOf(chat to getCurrentDateTime()))
+    fun updateLastMessage(chat: String, message: String): Flow<Boolean> = callbackFlow {
+        ref.child("last").child(chat)
+            .updateChildren(mapOf("time" to getCurrentDateTime(), "message" to message))
             .addOnCompleteListener {
                 if (it.isSuccessful) trySend(true) else error(false)
             }

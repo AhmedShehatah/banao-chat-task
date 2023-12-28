@@ -49,9 +49,9 @@ class ChatViewModel @Inject constructor(private val repo: IChatRepo) : ViewModel
         }
     }
 
-    fun updateLastMessage() {
+    fun updateLastMessage(message: String) {
         viewModelScope.launch {
-            repo.updateLastMessage(loadedChat).collect {}
+            repo.updateLastMessage(loadedChat, message).collect {}
         }
     }
 

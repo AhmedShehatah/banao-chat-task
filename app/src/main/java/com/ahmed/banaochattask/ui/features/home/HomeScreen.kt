@@ -84,12 +84,16 @@ fun HomeScreen(
 
 
                         Column {
-                            val chatText = remember(items[idx].chat, id) {
+                            val chatName = remember(items[idx].chat, id) {
                                 items[idx].chat.replace(id, "").ifBlank { "group" }
                             }
 
                             Text(
-                                text = "$chatText Chat"
+                                text = "$chatName Chat"
+                            )
+                            Spacer(modifier = Modifier.height(5.dp))
+                            Text(
+                                text = items[idx].message
                             )
                             Spacer(modifier = Modifier.height(5.dp))
                             Text(text = formattedDate(items[idx].time))

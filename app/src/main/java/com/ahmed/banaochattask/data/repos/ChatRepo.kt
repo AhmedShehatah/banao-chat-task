@@ -12,5 +12,6 @@ class ChatRepo(private val db: FireBaseStore) : IChatRepo {
     override fun sendMessage(chat: String, sender: String, message: String): Flow<Boolean> =
         db.sendMessage(chat, sender, message)
 
-    override fun updateLastMessage(chat: String): Flow<Boolean> = db.updateLastMessage(chat)
+    override fun updateLastMessage(chat: String, message: String): Flow<Boolean> =
+        db.updateLastMessage(chat, message)
 }
